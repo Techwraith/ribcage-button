@@ -39,7 +39,7 @@ var ButtonBase = Base.extend({
       this.disable();
     }
     var label = this.label || '';
-    this.$el.text(label);
+    this.$el.append('<span class="label">'+label+'</span>');
     if (this.options.classStr) {
       this.$el.addClass(this.options.classStr);
     }
