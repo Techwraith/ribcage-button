@@ -1,13 +1,16 @@
 var Base = require('ribcage-view')
-  , wrap = require('lodash.wrap')
+  , wrap = require('lodash.wrap');
 
 var ButtonBase = Base.extend({
 
   tagName: 'button'
 , className: 'btn'
 
-, beforeInit: function () {
+, beforeInit: function (opts) {
     var self = this;
+
+    this.options = opts;
+
     this.label  = this.options.label || this.label;
     this.icon   = this.options.icon || this.icon;
     this.action = this.action || wrap(this.options.action, function (fn) {
