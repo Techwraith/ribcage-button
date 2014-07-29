@@ -1,57 +1,90 @@
 var Base = require('ribcage-view')
-  , wrap = require('lodash.wrap');
+  , _ = require('lodash.isarray')
+  , AmpersandState = require('ampersand-state')
 
-var ButtonBase = Base.extend({
+module.exports = Base.extend({
 
   tagName: 'button'
-, className: 'btn'
 
-, beforeInit: function (opts) {
-    var self = this;
-
-    this.options = opts;
-
-    this.label  = this.options.label || this.label;
-    this.icon   = this.options.icon || this.icon;
-    this.action = this.action || wrap(this.options.action, function (fn) {
-      if (!this.options.disabled){
-        self.trigger('action');
-        if (self._action) { self._action(); }
-        if (fn) { fn(); }
-      }
-    });
-  }
+, template: require('./template.html.hbs')
 
 , events: {
-    'click': 'action'
+    'click': 'select'
   }
 
+, attributes: function attributes(){
+    var attrs = {}
+
+    if (this.state){
+      if (this.state.className) attrs['class'] = this.state.className
+      if (!this.state.enabled) attrs.disabled = 'disabled'
+    }
+
+    return attrs
+  }
+
+// DOM Events
+, select: function select(){
+    this.trigger('select')
+  }
+
+// DOM manipulation
+, toggleEnabled: function toggleEnabled(enabled){
+    if (enabled)
+      this.$el.removeAttr('disabled')
+    else
+      this.$el.attr('disabled', 'disabled')
+  }
+
+// public methods
 , enable: function () {
-    this.options.disabled = false;
-    this.render();
-    this.$el.attr('disabled', 'false');
+    this.state.enabled = true
   }
 
 , disable: function () {
-    this.options.disabled = true;
-    this.$el.attr('disabled', 'disabled');
+    this.state.enabled = false
   }
 
-, afterRender: function () {
-    if (this.options.disabled) {
-      this.disable();
-    }
-    var label = this.label || '';
-    this.$el.append('<span class="label">'+label+'</span>');
-    if (this.options.classStr) {
-      this.$el.addClass(this.options.classStr);
-    }
-    if (this.options.icon) {
-      this.$el.prepend('<i class="'+this.icon+'"></i>');
-    }
+// state methods
+, onStateChangeEnabled: function onStateChangeEnabled(state, enabled){
+    this.toggleEnabled(enabled)
   }
 
+, State: AmpersandState.extend({
+    props: {
+      label: ['string', true]
+      , icon: ['string', false]
+      , enabled: ['boolean', true, true]
+      , classes: ['string', true, 'btn']
+    }
+    , extraProperties: 'reject'
+    , derived: {
+      className: {
+        deps: ['classes']
+        , fn: function classNameFn(){
+          var classes = _.isArray(this.classes)
+            ? this.classes.join(' ')
+            : this.classes
+          return 'btn ' + classes
+        }
+      }
+    }
+  })
 
-});
+, beforeInit: function (options) {
+    this.state = new this.State(options)
+  }
 
-module.exports = ButtonBase;
+, bindEvents: function bindEvents(){
+    this.stopListening(this.state)
+
+    this.listenTo(this.state, 'change:enabled', this.onStateChangeEnabled)
+    this.listenTo(this.state, 'change:label', this.render)
+  }
+
+, beforeRender: function beforeRender(){
+    // ensure attrs are set before each render b/c backone only does this on init
+    this.$el.attr(this.attributes())
+  }
+
+})
