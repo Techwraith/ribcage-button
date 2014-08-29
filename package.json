@@ -1,6 +1,6 @@
 {
   "name": "ribcage-button",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A button for ribcage",
   "main": "ribcage-button.js",
   "dependencies": {
