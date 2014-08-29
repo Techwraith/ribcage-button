@@ -5,6 +5,7 @@
   "main": "ribcage-button.js",
   "dependencies": {
     "ampersand-state": "^4.3.6",
+    "lodash": "^2.4.1",
     "lodash.isarray": "^2.4.1",
     "ribcage-view": "^0.0.21"
   },
