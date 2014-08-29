@@ -3,20 +3,15 @@ Ribcage Button
 
 A little view to use with `ribcage-view` that gives you a button.
 
-## Install
-
-```
-npm install -S  ribcage-button
-```
-
 ## Usage
 
 ```javascript
 
-  var Button = require('ribcage-button')
+  var Button = require('button')
 
   var button = new Button({
     label: 'Submit'
+    , name: 'optional name'
   })
 
 ```
@@ -35,7 +30,10 @@ A class name of an icon to prepend to the button. Will be prepended as `<i class
 ### `<String> classes`
 The CSS classes to apply to the `<button>`. Defaults to `'btn'`.
 
-## Methods
+### `<String> name`
+Optional. Set a name for this button. Will be passed in select events
+
+## JS Methods
 
 ### `enable()`
 Enable the button.
@@ -45,8 +43,13 @@ Disable the button.
 
 ## Events
 
-### `.on('select')`
-Triggered when the button is enabled and clicked.
+### `.on('action|select', view, name, null, label)`
+Triggered when the button is enabled and clicked. **the `select` event is now deprecated, use `action` instead**
+
+* `view` is the button view
+* `name` is the name option, if set
+* third argument will always be `null` because buttons can't have a value
+* `label` is the label option.
 
 ## Tests
 None yet. Should be in prova when implemented.

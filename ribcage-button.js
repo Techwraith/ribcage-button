@@ -1,5 +1,7 @@
+'use strict';
+
 var Base = require('ribcage-view')
-  , _ = require('lodash.isarray')
+  , _ = require('lodash')
   , AmpersandState = require('ampersand-state')
 
 module.exports = Base.extend({
@@ -25,7 +27,10 @@ module.exports = Base.extend({
 
 // DOM Events
 , select: function select(){
-    this.trigger('select')
+    // TODO: standardize on one of these
+    // null is b/c buttons can't have a value
+    if (this.state.enabled) this.trigger('select', this, this.state.name, null, this.state.label)
+    if (this.state.enabled) this.trigger('action', this, this.state.name, null, this.state.label)
   }
 
 // DOM manipulation
@@ -56,6 +61,7 @@ module.exports = Base.extend({
       , icon: ['string', false]
       , enabled: ['boolean', true, true]
       , classes: ['string', true, 'btn']
+      , name: ['string', false]
     }
     , extraProperties: 'reject'
     , derived: {
