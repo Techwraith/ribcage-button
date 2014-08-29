@@ -9,7 +9,9 @@
     "lodash.isarray": "^2.4.1",
     "ribcage-view": "^0.0.21"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "hbsfy": "^2.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,6 +29,18 @@
   ],
   "author": "Techwraith",
   "license": "MIT",
+  "browserify": {
+    "transform": [
+      [
+        "hbsfy",
+        {
+          "extensions": [
+            "html.hbs"
+          ]
+        }
+      ]
+    ]
+  },
   "bugs": {
     "url": "https://github.com/Techwraith/ribcage-button/issues"
   },
