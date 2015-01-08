@@ -8,7 +8,13 @@ module.exports = Base.extend({
 
   tagName: 'button'
 
-, template: require('./template.html.hbs')
+, template: function template(args){
+    var html = ''
+    if (args.icon){
+      html += '<i class="icon-' + _.escape(args.icon) + '">'
+    }
+    html += _.escape(args.label)
+  }
 
 , events: {
     'click': 'select'
